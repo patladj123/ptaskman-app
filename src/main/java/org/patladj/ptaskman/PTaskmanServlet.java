@@ -14,6 +14,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * This is a TEST Servlet. It will be teleted soon.
+ * @author Kyncho
+ *
+ */
 @WebServlet(
         name = "PTaskmanServlet",
         urlPatterns = {"/ptaskman"}
