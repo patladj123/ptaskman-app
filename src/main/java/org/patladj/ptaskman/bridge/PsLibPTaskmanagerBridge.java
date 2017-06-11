@@ -7,7 +7,7 @@ import org.patladj.ptaskman.model.Process;
  * The interface is being implemented by different types of libraries (PSLib) that are used for fetching process information and process manipulation.
  * The methods which start with get are requests to the TaskManager to the PSLib.
  * The methods which start with receive are data received from the PSLib to the TaskManager.
- * @author Kyncho
+ * @author PatlaDJ
  *
  */
 public interface PsLibPTaskmanagerBridge {

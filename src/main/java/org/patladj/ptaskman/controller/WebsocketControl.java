@@ -18,7 +18,7 @@ import org.apache.catalina.websocket.WebSocketServlet;
 
 /**
  * This is the websocket which is used for receiving and sending messages from and to the front-end part
- * @author Kyncho
+ * @author PatlaDJ
  *
  */
 @ServerEndpoint("/ptoperations")

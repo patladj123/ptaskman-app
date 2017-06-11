@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * This is a TEST Servlet. It will be teleted soon.
- * @author Kyncho
+ * @author PatlaDJ
  *
  */
 @WebServlet(

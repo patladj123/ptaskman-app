@@ -11,7 +11,7 @@ import com.jezhumble.javasysmon.ProcessInfo;
 
 /**
  * Implements a bridge between the JavaSysMon library for process information and actions and the Taskmanager
- * @author Kyncho
+ * @author PatlaDJ
  *
  */
 public class BridgeWithJavaSysMon implements PsLibPTaskmanagerBridge {

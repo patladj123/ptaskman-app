@@ -2,7 +2,7 @@ package org.patladj.ptaskman.model;
 
 /**
  * Represents a single process with all if its information
- * @author Kyncho
+ * @author PatlaDJ
  *
  */
 public class Process {
