@@ -21,25 +21,42 @@ import org.apache.catalina.websocket.WebSocketServlet;
  * @author PatlaDJ
  *
  */
+@SuppressWarnings("deprecation")
 @ServerEndpoint("/ptoperations")
 public class WebsocketControl extends WebSocketServlet {
-    //notice:not thread-safe
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 110283178240290856L;
+
+	/**
+	 * List with all sessions (clients) which are connected using from the webpage interface
+	 */
     private static ArrayList<Session> sessionList = new ArrayList<Session>();
     
+    /**
+     * Ref to the FrontEndControl singleton instance
+     */
     private static FrontEndControl fec=null;
     
+    /**
+     * Parsing incoming message string by using this pattern
+     */
     private static Pattern SEP_INCOMING_MESSAGE=Pattern.compile("^([^\\s+])\\s+(.*)", Pattern.DOTALL);
     
-//    static {
-//    	fec=FrontEndControl.getRunningInstance();
+//    public static ArrayList<Session> getSessionList() {
+//    	return sessionList;
 //    }
     
-    public static ArrayList<Session> getSessionList() {
-    	return sessionList;
-    }
-    
+    /**
+     * Things that are done when a new client connects on the webpage
+     * @param session Received new session
+     */
     @OnOpen
     public void onOpen(Session session) {
+    	fec=FrontEndControl.getRunningInstance(this);
+    	
     	synchronized (getClass()) {
 //          try {
             sessionList.add(session);
@@ -49,6 +66,10 @@ public class WebsocketControl extends WebSocketServlet {
     	}
     }
     
+    /**
+     * Things that are done where a client is disconnected from the webpage
+     * @param session Given session which this client had
+     */
     @OnClose
     public void onClose(Session session){
         synchronized (getClass()) {
@@ -56,6 +77,10 @@ public class WebsocketControl extends WebSocketServlet {
         }
     }
     
+    /**
+     * Registers a new message received on the websocket for this particular client
+     * @param msg The string message
+     */
     @OnMessage
     public void onMessage(String msg) {
     	System.out.println(" ** Received message: |"+msg+"|");
@@ -80,6 +105,23 @@ public class WebsocketControl extends WebSocketServlet {
     	synchronized (getClass()) {
     		fec.processClientCommand(messageCommand, messageBody);
 		}
+    }
+    
+    /**
+     * Sends data to all the clients which are connected on the webpage
+     * @param jsonString
+     */
+    public void sendDataToAllTheClients(String jsonString) {
+    	synchronized (getClass()) {
+    		try {
+    			for (Session session : sessionList) {
+    				//Send the data to all the visitors of the webapp page
+    				session.getBasicRemote().sendText(jsonString);
+    			}
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
     }
 
 	@Override

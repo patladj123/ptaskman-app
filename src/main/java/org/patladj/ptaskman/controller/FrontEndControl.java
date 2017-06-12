@@ -1,40 +1,66 @@
 package org.patladj.ptaskman.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.websocket.Session;
-
 import org.patladj.ptaskman.bridge.BridgeWithJavaSysMon;
 import org.patladj.ptaskman.bridge.PsLibPTaskmanagerBridge;
-import org.patladj.ptaskman.model.ProcessList;
 import org.patladj.ptaskman.model.Process;
+import org.patladj.ptaskman.model.ProcessList;
 
 import com.google.gson.Gson;
 
+/**
+ * This class actions are making the logical connection between the front-end and the process management library interface by using the WebsocketControl's actions
+ * @author PatlaDJ
+ *
+ */
 public class FrontEndControl implements Runnable {
 	/**
 	 * To be able to access the running Thread publicly
 	 */
 	public volatile static Thread fecThread=null;
 	
+	/**
+	 * Ref to the singleton instance of this class
+	 */
 	private volatile static FrontEndControl fec=null;
+	
+	/**
+	 * Ref to the WebsocketControl's instance
+	 */
+	private volatile static WebsocketControl wsc=null;
+	
+	/**
+	 * Used internally for locking threads around it
+	 */
 	private static Object lock=new Object();
 	
+	/**
+	 * is still running flag
+	 */
 	private volatile boolean isRunning=true;
 
+	/**
+	 * Interface to the process management library
+	 */
 	private PsLibPTaskmanagerBridge psUtilLib = null;
-
-	private ArrayList<Session> sessionList = null;
 	
+	/**
+	 * Used for json creation and parsing
+	 */
 	private Gson gson = null;
 	
-	public static FrontEndControl getRunningInstance() {
+	
+	/**
+	 * Obtains a running singleton instance of this Runnable class
+	 * @param theWsc Ref that is intended to be received from the WebsocketControl's instance
+	 * @return
+	 */
+	public static FrontEndControl getRunningInstance(WebsocketControl theWsc) {
+		wsc=theWsc; //Have a ref here
+		
 		synchronized (lock) {
 			if (fec==null) {
 				fec=new FrontEndControl();
 				fecThread=new Thread(fec, "FrontEndControl Thread");
-//				fecThread.setDaemon(true);
 				fecThread.start();
 			}
 		}
@@ -43,12 +69,14 @@ public class FrontEndControl implements Runnable {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * Parallel executing logic goes here
+	 */
 	@Override
 	public void run() {
-//		psUtilLib = new BridgeWithJavaSysMon();
-		sessionList = WebsocketControl.getSessionList();
-//		gson=new Gson();
+		psUtilLib = new BridgeWithJavaSysMon();
+		gson=new Gson();
 		
 		while (this.isRunning) {
 			System.out.println(" > One iteration...");
@@ -73,15 +101,7 @@ public class FrontEndControl implements Runnable {
 			String jsonData="kur";
 			
 			//Send the data to all clients
-			try {
-				for (Session session : sessionList) {
-					//Send the data to all the visitors of the webapp page
-					session.getBasicRemote().sendText(jsonData);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			wsc.sendDataToAllTheClients(jsonData);
 			
 			
 			try {
@@ -94,6 +114,9 @@ public class FrontEndControl implements Runnable {
 		}
 	}
 	
+	/**
+	 * Stops the thread gracefully
+	 */
 	public void stopIt() {
 		this.isRunning=false;
 		synchronized (lock) {
@@ -102,7 +125,9 @@ public class FrontEndControl implements Runnable {
 	}
 
 
-
+	/**
+	 * def destructor
+	 */
 	@Override
 	protected void finalize() throws Throwable {
 		this.stopIt();
@@ -110,7 +135,11 @@ public class FrontEndControl implements Runnable {
 	}
 
 
-
+	/**
+	 * Intended to be invoked from a WebsocketControl instance. Performs messageCommand actions defined by messageBody
+	 * @param messageCommand What to do
+	 * @param messageBody Parameters to execute the messageCommand with
+	 */
 	public void processClientCommand(String messageCommand, String messageBody) {
 		switch (messageCommand) {
 			case "kill_process":
