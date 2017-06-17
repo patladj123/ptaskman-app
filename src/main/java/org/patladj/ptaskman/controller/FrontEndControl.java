@@ -98,7 +98,7 @@ public class FrontEndControl implements Runnable {
 			
 			//Genrate a Json String
 //			String jsonData=gson.toJson(pl);
-			String jsonData="kur";
+			String jsonData="kaka baba";
 			
 			//Send the data to all clients
 			wsc.sendDataToAllTheClients(jsonData);
