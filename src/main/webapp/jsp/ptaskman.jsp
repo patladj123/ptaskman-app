@@ -33,7 +33,7 @@
             </div></div>
             <span class="stretch"></span>
         </div>
-        <div class="versep" style="height: 12px;"></div>
+        <div class="versep" style="height: 22px;"></div>
 
         <div class="fill-width" style="height: 472px;">
             <table id="processtable" class="display" width="100%"></table>

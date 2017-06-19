@@ -5464,7 +5464,7 @@
 		// If sorting or filtering has occurred, jump the scrolling back to the top
 		// only if we aren't holding the position
 		if ( (settings.bSorted || settings.bFiltered) && ! settings._drawHold ) {
-			divBodyEl.scrollTop = 0;
+			// divBodyEl.scrollTop = 0;
 		}
 	}
 	
@@ -11698,7 +11698,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sSearch": "Search:",
+			"sSearch": "Quick search process:",
 	
 	
 			/**

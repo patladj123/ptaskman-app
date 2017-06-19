@@ -36,6 +36,19 @@ var relativeRootWsProto=document.location.href.replace(/^http\:\/\//ig,'ws://').
 $(document).ready(function() {
     //First time initialize the datatable with empty data
     $theDataTable=$('#processtable').DataTable( tConfig([]) );
+    $('#processtable tbody').on( 'click', 'tr', function () {
+        var $this=$(this);
+        if ( $this.hasClass('selected') ) { //the same row is clicked, just unselecting
+            $this.removeClass('selected');
+        }
+        else {
+            $r=$theDataTable.$('tr.selected'); //New row is clicked. Unselecting the old one (if any) and selecting the new one
+            $r.removeClass('selected');
+            $this.addClass('selected');
+            if (_selectedPid !== -1) hideProcessInfoUI();
+            showProcessInfoUI($this);
+        }
+    } );
 
     //Global CPU Smoothie chart init (The one on the top-left)
     globalcpuinfoSmoothie=new pSmoothie({
@@ -233,23 +246,22 @@ ws.onmessage = function(message) {
         }
 
         //Recreate the datatable grid
+        /*var saveTheHeight=$('#processtable').outerHeight();
+        console.log('saveTheHeight='+saveTheHeight);
+        $('#processtable').css('height',saveTheHeight+'px');
         $theDataTable.destroy();              // remove table enhancements
         $('#processtable').empty();          // empty the table content ( this remove the rows)
         $theDataTable = $('#processtable').DataTable(tConfig(aJson.cmdData));   // recreate the table with the new configuration
+        $('#processtable').css('height','');*/
 
-        $('#processtable tbody').on( 'click', 'tr', function () {
-            var $this=$(this);
-            if ( $this.hasClass('selected') ) { //the same row is clicked, just unselecting
-                $this.removeClass('selected');
-            }
-            else {
-                $r=$theDataTable.$('tr.selected'); //New row is clicked. Unselecting the old one (if any) and selecting the new one
-                $r.removeClass('selected');
-                $this.addClass('selected');
-                if (_selectedPid !== -1) hideProcessInfoUI();
-                showProcessInfoUI($this);
-            }
-        } );
+        var $tbl=$('#processtable');
+        if (!document.getElementById('twrapper')) $tbl.wrap( '<div id="twrapper" style="display:block; height:'+$tbl.height()+'px;"></div>' );
+        else $('#twrapper').css('height',$tbl.height()+'px');
+        $theDataTable.clear();
+        $theDataTable.rows.add(aJson.cmdData); // Add new data
+        $theDataTable.columns.adjust().draw(); // Redraw the DataTable
+
+
 
         //Restoring the selected row (if any)
         //Using native table colums search due to performance concerns
@@ -271,7 +283,6 @@ ws.onmessage = function(message) {
                 $wantedRow.addClass('selected');
             }
         }
-
 
         isTableUpdating=false;
     }
