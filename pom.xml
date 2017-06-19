@@ -82,11 +82,11 @@
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat7-websocket -->
-		<dependency>
+		<!--<dependency>
 		    <groupId>org.apache.tomcat</groupId>
 		    <artifactId>tomcat7-websocket</artifactId>
 		    <version>${tomcat.version}</version>
-		</dependency>
+		</dependency>-->
 		
 		<dependency>
 		    <groupId>commons-digester</groupId>
@@ -108,8 +108,16 @@
 		    <artifactId>javasysmon</artifactId>
 		    <version>0.3.5.1</version>
 		</dependency>
-		
-        
+
+        <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+
+
 
     </dependencies>
      <build>

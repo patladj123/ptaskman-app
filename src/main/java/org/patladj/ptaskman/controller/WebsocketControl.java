@@ -43,7 +43,7 @@ public class WebsocketControl extends WebSocketServlet {
     /**
      * Parsing incoming message string by using this pattern
      */
-    private static Pattern SEP_INCOMING_MESSAGE=Pattern.compile("^([^\\s+])\\s+(.*)", Pattern.DOTALL);
+    private static Pattern SEP_INCOMING_MESSAGE=Pattern.compile("^([^\\s]+)\\s+(.*)", Pattern.DOTALL);
     
 //    public static ArrayList<Session> getSessionList() {
 //    	return sessionList;

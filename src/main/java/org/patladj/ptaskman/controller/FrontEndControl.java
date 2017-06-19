@@ -6,6 +6,9 @@ import org.patladj.ptaskman.model.Process;
 import org.patladj.ptaskman.model.ProcessList;
 
 import com.google.gson.Gson;
+import org.patladj.ptaskman.util.Util;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class actions are making the logical connection between the front-end and the process management library interface by using the WebsocketControl's actions
@@ -80,29 +83,40 @@ public class FrontEndControl implements Runnable {
 		
 		while (this.isRunning) {
 			System.out.println(" > One iteration...");
+			String jsonData="";
 			
 			/**
 			 * Deal with the data from the library that needs to be sent periodically to the front-end
 			 */
-			
+
+			//#############################################################################################################################
 			//Obtain a fresh process list object using the interface to the library
-//			ProcessList pl=psUtilLib.getProcessList();
-			Process p=new Process();
-			p.cpuUsage=500;
-			p.memUsage=400;
-			p.name="RUNDLL.exe";
-			p.owner="Administrator";
-			p.pid=200;
-			ProcessList pl=new ProcessList();
-			pl.add(p);
+			ProcessList pl=psUtilLib.getProcessList();
 			
-			//Genrate a Json String
-//			String jsonData=gson.toJson(pl);
-			String jsonData="kaka baba";
+			//Genrate a Json String for the process list
+			jsonData="{ \"cmd\": \"procList\", \"cmdData\":"+pl.toJsonArray()+" }";
 			
 			//Send the data to all clients
 			wsc.sendDataToAllTheClients(jsonData);
-			
+			//#############################################################################################################################
+			//Genrate a Json String with a fresh data for the global resources
+			double totRamInGb=Util.roundToPrec(psUtilLib.getSystemRAMTotal()/1024.0d/1024.0d/1024.0d,3);
+			double usedRamInGb=Util.roundToPrec(psUtilLib.getSystemRAMInUse()/1024.0d/1024.0d/1024.0d,3);
+
+			jsonData="{ \"cmd\": \"globRes\", \"cmdData\": {" +
+					"\"osname\":\""+Util.JSString(psUtilLib.getSystemOSName())+"\"," +
+					"\"cpucores\":\""+psUtilLib.getSystemCPUCoresNum()+"\"," +
+					"\"cpufreq\":\""+Util.digits1Format.format(Util.roundToPrec(psUtilLib.getSystemCPUFrequencyHz()/1024.0d/1024.0d,1))+"\"," +
+					"\"uptime\":\""+Util.secondsToReadable(psUtilLib.getSystemUptimeSeconds())+"\"," +
+					"\"cpuinfo\":\""+Util.digits1Format.format(Util.roundToPrec(psUtilLib.getSystemCpuUsagePercent()*100,1))+"\"," +
+					"\"raminfo\":\""+Util.digits3Format.format(usedRamInGb)+"Gb out of "+Util.digits3Format.format(totRamInGb)+"Gb\"," +
+					"\"ramtot\":\""+Util.digits3Format.format(totRamInGb)+"\"," +
+					"\"ramused\":\""+Util.digits3Format.format(usedRamInGb)+"\"" +
+					"} }";
+
+			//Send the data to all clients
+			wsc.sendDataToAllTheClients(jsonData);
+			//#############################################################################################################################
 			
 			try {
 				synchronized (lock) {
@@ -112,6 +126,7 @@ public class FrontEndControl implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		System.out.println(" --- Exiting the Thread safely");
 	}
 	
 	/**

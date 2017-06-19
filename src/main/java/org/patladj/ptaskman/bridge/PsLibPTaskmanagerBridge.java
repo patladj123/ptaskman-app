@@ -36,5 +36,52 @@ public interface PsLibPTaskmanagerBridge {
 	 * @param processList Receives a process list in undefined format which is meant to be converted into a ProcessList in the implementation
 	 */
 	public void receiveProcessList(Object processList);
-	
+
+	/**
+	 * This method is when the TaskManager is requesting a newly refreshed uptime in seconds from the PSLib
+	 * @return Uptime in measured in seconds
+	 */
+	public long getSystemUptimeSeconds();
+
+	/**
+	 * This method is when the TaskManager is requesting a newly refreshed number of CPU cores from the PSLib
+	 * @return Number of CPU cores
+	 */
+	public int getSystemCPUCoresNum();
+
+	/**
+	 * This method is when the TaskManager is requesting a newly refreshed current CPU frequency from the PSLib
+	 * @return Current CPU frequency in Hz
+	 */
+	public long getSystemCPUFrequencyHz();
+
+	/**
+	 * This method is when the TaskManager is requesting a newly refreshed name of the OS from the PSLib
+	 * @return The OS Name
+	 */
+	public String getSystemOSName();
+
+	/**
+	 * This method is when the TaskManager is requesting a newly refreshed global CPU usage from the PSLib
+	 * @return The average global CPU usage in percents (0 is 0%, 1.0 is 100%) since the last invocation of this method
+	 */
+	public float getSystemCpuUsagePercent();
+
+	/**
+	 * This method is when the TaskManager is requesting a newly refreshed total memory info from the PSLib
+	 * @return Total memory (RAM) installed on the platform. In bytes
+	 */
+	public long getSystemRAMTotal();
+
+	/**
+	 * This method is when the TaskManager is requesting a newly refreshed free memory info from the PSLib
+	 * @return Free memory (RAM) on the platform. In bytes
+	 */
+	public long getSystemRAMFree();
+
+	/**
+	 * This method is when the TaskManager is requesting a newly refreshed memory that is in use info from the PSLib
+	 * @return Memory (RAM) that is in use on the platform. In bytes
+	 */
+	public long getSystemRAMInUse();
 }
