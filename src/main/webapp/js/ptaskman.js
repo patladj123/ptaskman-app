@@ -104,14 +104,18 @@ function selectedPidRow() {
             }
         ],"processcpuinfo");
 
+        var mi=(this.memusage - (this.memusage*0.08)),
+            ma=((this.memusage-0) + (this.memusage*0.08));
+
         //RAM Smoothie chart init (for a process)
         this._memSmoothie=new pSmoothie({
-
+                maxValue:ma,
+                minValue:mi
         },
         [
             {
-                strokeStyle: 'rgb(0, 255, 0)',
-                fillStyle: 'rgba(0, 255, 0, 0.4)',
+                strokeStyle: 'rgb(192, 161, 107)',
+                fillStyle: 'rgba(192, 161, 107, 0.4)',
                 lineWidth: 3
             }
         ],"processmeminfo");
@@ -174,13 +178,14 @@ function pSmoothie(addConf, linesStyles, canvasId) {
     var smDefConf={
         grid: {
             lineWidth: 1,
-            millisPerLine: 250,
+            millisPerLine: 1000,
             verticalSections: 6,
-            responsive: true
+            responsive: true,
         },
         labels: {
             fillStyle: 'rgb(60, 0, 0)'
-        }
+        },
+        millisPerPixel:69
     };
 
     //Adding/replacing config properties with the passed argument one (if any)
@@ -189,7 +194,6 @@ function pSmoothie(addConf, linesStyles, canvasId) {
     }
 
     this._smoothieO = new SmoothieChart(smDefConf);
-    this._smoothieO.streamTo(document.getElementById(this._canvasId));
 
     //Data lines (the same count as the line styles which are passed as a argument)
     for (var i=0; i<this._numLines; i++) {
