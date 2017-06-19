@@ -11,12 +11,7 @@
 		<script type="text/javascript" src="../js/ptaskman.js"></script>
     </head>
 
-    <body>          
-        <%--<textarea id="chatlog" readonly></textarea><br/>
-        <input id="msg" type="text" />
-        <button type="submit" id="sendButton" onClick="postToServer()">Send!</button>
-        <button type="submit" id="sendButton" onClick="closeConnect()">End</button><br><br>--%>
-
+    <body>
         <div class="fill-width" style="height: 104px;">
             <div class="box1" style="border: 1px solid #2b542c; background-color: #2b542c;"><div class="center-ver-any">
                 <div class="versep" style="height:30px;"></div>

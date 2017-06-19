@@ -14,7 +14,11 @@ public class ProcessList extends ArrayList<Process> {
 	public ProcessList() {
 		super();
 	}
-	
+
+	/**
+	 * Converts this object into json object - my way
+	 * @return The generated json string
+	 */
 	public String toJsonArray() {
 		StringBuilder sb=new StringBuilder();
 		sb.append("[");

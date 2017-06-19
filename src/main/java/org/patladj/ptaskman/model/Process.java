@@ -38,6 +38,10 @@ public class Process {
 	 */
 	public Process() {}
 
+	/**
+	 * Converts this object into json array - my way
+	 * @return The generated json string
+	 */
 	public String toJsonArray() {
 		return "["+
 					"\""+Util.JSString(this.pid+"")+"\","+

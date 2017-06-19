@@ -28,13 +28,30 @@ var relativeRootWsProto=document.location.href.replace(/^http\:\/\//ig,'ws://').
     globalcpuinfoSmoothie=null,
     globalmeminfoSmoothie=null,
     isGlobalmeminfoSmoothieInit=false, //Flag for the RAM chart defining whether it is already initialized
-    processcpuinfoSmoothie=null,
-    processmeminfoSmoothie=null,
-    processcpuCanvasHTML='<canvas id="processcpuinfo" style="width:100%; height:112px"></canvas>', //These canvases are created dynamically on the DOM
+    processcpuCanvasHTML='<canvas id="processcpuinfo" style="width:100%; height:112px"></canvas>', //These 2 canvases are created dynamically on the DOM upon click on a process
     processmemCanvasHTML='<canvas id="processmeminfo" style="width:100%; height:112px"></canvas>',
-    _selectedPidRow=null,
+    _selectedPidRow=null, //We store the object which control the process related charts and data visualisation and manipulation
     _selectedPid=-1;
 
+$(document).ready(function() {
+    //First time initialize the datatable with empty data
+    $theDataTable=$('#processtable').DataTable( tConfig([]) );
+
+    //Global CPU Smoothie chart init (The one on the top-left)
+    globalcpuinfoSmoothie=new pSmoothie({
+            maxValue:100,
+            minValue:0
+        },
+        [
+            {
+                strokeStyle: 'rgb(0, 255, 0)',
+                fillStyle: 'rgba(0, 255, 0, 0.4)',
+                lineWidth: 3
+            }
+        ],"globalcpuinfo");
+} );
+
+//Instance of this represents control unit bounded both to a process and to its visualisation and manipulation GUI
 function selectedPidRow() {
     this.pid=null;
     this.name=null;
@@ -45,6 +62,7 @@ function selectedPidRow() {
     this._$pCont=null;
     this._$mCont=null;
 
+    //Only refreshes the new data from the JQuery table row that is presently selected
     this.refreshData=function($selRow) {
         this.pid=$selRow.find('td').eq(0).text();
         this.name=$selRow.find('td').eq(1).text();
@@ -52,6 +70,7 @@ function selectedPidRow() {
         this.memusage=$selRow.find('td').eq(4).text();
     }
 
+    //Shows the bottom div, initialize the charts for it
     this.createGUI=function() {
         $('#procinfo_gui').css('display','block');
         this._$pCont=$('#processcpuinfo_cont');
@@ -85,6 +104,7 @@ function selectedPidRow() {
         ],"processmeminfo");
     }
 
+    //Update the UI placeholders and charts
     this.updateChartsAndSpots=function() {
         //Update the placeholders
         $('#procname').html(this.name);
@@ -101,6 +121,7 @@ function selectedPidRow() {
         }
     }
 
+    //Destroys mem consuming objects and hides the bottom div
     this.destroyGUI=function() {
         if (this._$pCont) this._$pCont.html('');
         if (this._$mCont) this._$mCont.html('');
@@ -110,6 +131,7 @@ function selectedPidRow() {
     return this;
 }
 
+//Invoken upon click on a process from the list, when we want to create a 'selectedPidRow' instance for it.
 function showProcessInfoUI($selRow) {
     _selectedPidRow=new selectedPidRow();
     _selectedPidRow.refreshData($selRow);
@@ -118,6 +140,7 @@ function showProcessInfoUI($selRow) {
     _selectedPid=_selectedPidRow.pid;
 }
 
+//Invoken when we want to blank the present 'selectedPidRow' instance. There can be only one.
 function hideProcessInfoUI() {
     _selectedPidRow.destroyGUI();
     _selectedPidRow=null;
@@ -155,12 +178,12 @@ function pSmoothie(addConf, linesStyles, canvasId) {
     this._smoothieO = new SmoothieChart(smDefConf);
     this._smoothieO.streamTo(document.getElementById(this._canvasId));
 
-    // Data
+    //Data lines (the same count as the line styles which are passed as a argument)
     for (var i=0; i<this._numLines; i++) {
         this.lines[i] = new TimeSeries();
     }
 
-    // Add to SmoothieChart
+    //Add to SmoothieChart
     for (var i=0; i<this._numLines; i++) {
         this._smoothieO.addTimeSeries(this.lines[i], this._linesStyles[i]);
     }
@@ -171,26 +194,9 @@ function pSmoothie(addConf, linesStyles, canvasId) {
     return this;
 }
 
+//On Websocket open
 ws.onopen = function(){
 };
-
-$(document).ready(function() {
-    //First time initialize the datatable with empty data
-    $theDataTable=$('#processtable').DataTable( tConfig([]) );
-
-    //CPU Smoothie chart init
-    globalcpuinfoSmoothie=new pSmoothie({
-        maxValue:100,
-        minValue:0
-    },
-    [
-        {
-            strokeStyle: 'rgb(0, 255, 0)',
-            fillStyle: 'rgba(0, 255, 0, 0.4)',
-            lineWidth: 3
-        }
-    ],"globalcpuinfo");
-} );
 
 //Websocket receive control
 ws.onmessage = function(message) {

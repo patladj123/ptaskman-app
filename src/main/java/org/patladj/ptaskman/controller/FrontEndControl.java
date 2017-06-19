@@ -5,7 +5,6 @@ import org.patladj.ptaskman.bridge.PsLibPTaskmanagerBridge;
 import org.patladj.ptaskman.model.Process;
 import org.patladj.ptaskman.model.ProcessList;
 
-import com.google.gson.Gson;
 import org.patladj.ptaskman.util.Util;
 
 import java.util.concurrent.TimeUnit;
@@ -47,12 +46,6 @@ public class FrontEndControl implements Runnable {
 	private PsLibPTaskmanagerBridge psUtilLib = null;
 	
 	/**
-	 * Used for json creation and parsing
-	 */
-	private Gson gson = null;
-	
-	
-	/**
 	 * Obtains a running singleton instance of this Runnable class
 	 * @param theWsc Ref that is intended to be received from the WebsocketControl's instance
 	 * @return
@@ -79,7 +72,6 @@ public class FrontEndControl implements Runnable {
 	@Override
 	public void run() {
 		psUtilLib = new BridgeWithJavaSysMon();
-		gson=new Gson();
 		
 		while (this.isRunning) {
 			System.out.println(" > One iteration...");
