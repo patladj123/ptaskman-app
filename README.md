@@ -22,6 +22,7 @@ Build & run HOWTO. Stand alone. (No need of app server. Uses embedded Tomcat 7):
  - mvn package
  - cd target
  - java -jar ptaskman-app-1.0-SNAPSHOT-jar-with-dependencies.jar
+ - Navigate your browser to http://localhost:8080/jsp/ptaskman.jsp
 
 
 If you want to run it IDE I will publish instructions soon.
