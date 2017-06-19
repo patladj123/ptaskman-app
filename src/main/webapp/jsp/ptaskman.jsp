@@ -4,14 +4,9 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="../css/ptaskman.css"/>
     	<link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css"/>
-		<link rel="stylesheet" type="text/css" href="../css/responsive.dataTables.css"/>
-		<link rel="stylesheet" type="text/css" href="../css/select.dataTables.css"/>
 		 
 		<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
 		<script type="text/javascript" src="../js/jquery.dataTables.js"></script>
-		<script type="text/javascript" src="../js/dataTables.responsive.js"></script>
-		<script type="text/javascript" src="../js/dataTables.select.js"></script>
-        <%--<script type="text/javascript" src="../js/fnFindCellRowNodes.js"></script>--%>
 		<script type="text/javascript" src="../js/smoothie.js"></script>
 		<script type="text/javascript" src="../js/ptaskman.js"></script>
     </head>

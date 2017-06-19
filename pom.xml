@@ -170,7 +170,7 @@
 			    <configuration>
 				    <port>8080</port>
 				    <path>/</path>
-				    <tomcatWebXml>E:\eclipse_projs\wksp_ptaskman6\ptaskman-app\target\classes\META-INF\resources\WEB-INF\web.xml</tomcatWebXml>
+				    <!--<tomcatWebXml>E:\eclipse_projs\wksp_ptaskman6\ptaskman-app\target\classes\META-INF\resources\WEB-INF\web.xml</tomcatWebXml>-->
 			    </configuration>
 		    </plugin>
         </plugins>
