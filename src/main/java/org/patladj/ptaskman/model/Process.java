@@ -8,6 +8,7 @@ import org.patladj.ptaskman.util.Util;
  *
  */
 public class Process {
+
 	/**
 	 * Process pid
 	 */
@@ -24,9 +25,9 @@ public class Process {
 	public String owner;
 	
 	/**
-	 * Process cpu usage level (in percents)
+	 * Process cpu usage level (in percents from 0.0f to 1.0f)
 	 */
-	public int cpuUsagePercent;
+	public float cpuUsagePercent;
 	
 	/**
 	 * Process memory usage level (in Mb)
@@ -47,7 +48,7 @@ public class Process {
 					"\""+Util.JSString(this.pid+"")+"\","+
 					"\""+Util.JSString(this.name)+"\","+
 					"\""+Util.JSString(this.owner)+"\","+
-					"\""+Util.JSString(this.cpuUsagePercent +"")+"\","+
+					"\""+Util.JSString(Util.roundToPrec(this.cpuUsagePercent*100.0f,2) +"")+"\","+
 					"\""+Util.JSString(this.memUsageMb +"")+"\""
 				+"]";
 	}

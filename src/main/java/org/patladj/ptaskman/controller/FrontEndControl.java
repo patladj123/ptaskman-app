@@ -74,7 +74,7 @@ public class FrontEndControl implements Runnable {
 		psUtilLib = new BridgeWithJavaSysMon();
 		
 		while (this.isRunning) {
-			System.out.println(" > One iteration...");
+//			System.out.println(" > One iteration...");
 			String jsonData="";
 			
 			/**

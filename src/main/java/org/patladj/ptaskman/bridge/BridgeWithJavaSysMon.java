@@ -60,39 +60,69 @@ public class BridgeWithJavaSysMon implements PsLibPTaskmanagerBridge {
 
 	@Override
 	public ProcessList getProcessList() {
-		ProcessInfo[] pt = jsm.processTable();
-
-		//Sort them by pid so they are given to the table the same order as the last refresh of the table
-		Arrays.sort(pt, new ByPidComparator());
-
-		ProcessList pl = new ProcessList();
-		
 		synchronized (this) {
-			processMap.clear();
+			ProcessInfo[] pt = jsm.processTable();
+
+			//Sort them by pid so they are given to the table the same order as the last refresh of the table
+			Arrays.sort(pt, new ByPidComparator());
+
+			ProcessList pl = new ProcessList();
+
+			Map<Long,Process> newProcessMap = new HashMap<Long,Process>(); //We accumulate the new process list mapped by pid here. We still need the old one during the loop
+
+			CpuTimes currCpuTimes=jsm.cpuTimes();
+			long idleMillis=currCpuTimes.getIdleMillis();
 			
 			for (int i=0; (i<pt.length && i<limitProcessesCnt); i++) {
 				if (pt[i].getTotalBytes() > 0) {
 					// We build the process list here
-					Process p = new Process();
+					BridgeWithJavaSysMonProcess p = new BridgeWithJavaSysMonProcess();
 					p.pid=pt[i].getPid();
 					p.name=pt[i].getName();
 					p.owner=pt[i].getOwner();
-					p.cpuUsagePercent = (int)Util.rand(0, 100); //Temporary fix until I make the lib properly obtain cross-platform CPU usage percent per process
+
+					// -------------- Begin calc CPU usage for a particular process --------------------------------------------------------------------
+					//Get the current/previous CpuTimes for this process and potentially work with it
+					CpuTimes currPrevCpuTimesSnapshot=null;
+					try {
+						currPrevCpuTimesSnapshot = ((BridgeWithJavaSysMonProcess)processMap.get(p.pid)).currPrevCpuTimesSnapshot;
+					}
+					catch (NullPointerException npe) {
+						/* Ignore */
+					}
+
+					//calculate new cpuTimes specifically for this process
+					if (currPrevCpuTimesSnapshot==null) {
+						p.cpuUsagePercent=0.0f; //First invocation, the process will have 0 CPU usage until we gather enough data to bring overall CPU usage percent.
+												//This happens between the first and the second invocation
+						p.currPrevCpuTimesSnapshot = new CpuTimes(pt[i].getUserMillis(), pt[i].getSystemMillis(), idleMillis);
+					}
+					else {
+						CpuTimes processCpuTimesIncomingSnapshot=new CpuTimes(pt[i].getUserMillis(), pt[i].getSystemMillis(), idleMillis);
+						float cpuUsage = processCpuTimesIncomingSnapshot.getCpuUsage(currPrevCpuTimesSnapshot);
+						p.cpuUsagePercent = cpuUsage;
+						p.currPrevCpuTimesSnapshot=processCpuTimesIncomingSnapshot;
+					}
+					// <-------------------------------------------------------------------- End calc CPU usage for particular process -----------------
+
 					p.memUsageMb =Util.roundToPrec(pt[i].getTotalBytes() / 1024.0f / 1024.0f, 2);
 
 					pl.add(p);
 
 					//We also fill a map with the processes indexed by pid for faster access later when info about particular process is requested
-					processMap.put(p.pid, p);
+					newProcessMap.put(p.pid, p);
 				}
 			}
+
+			processMap.clear();
+			processMap=newProcessMap;
+			return pl;
 		}
-		return pl;
 	}
 
 	@Override
 	public void receiveProcessList(Object processList) {
-		//This is potentially when the Lib calls a refresh of the processes, not the other way around. Not yet implemented.
+		//This is potentially when the PsLib calls a refresh of the processes, not the other way around. Not yet implemented. And no need to be implemented (for now)
 	}
 
 	@Override
@@ -124,38 +154,10 @@ public class BridgeWithJavaSysMon implements PsLibPTaskmanagerBridge {
 			return ret; //Not enough history for accurate overall estimate of the processor usage
 		}
 
-		//Next request for cputumes should be atleast after 1 second since the previous
+		//Next request for cputumes should be atleast after 1 second since the previous for precise approximation of the CPU usage
 		CpuTimes presentCpuTimes=jsm.cpuTimes();
 		ret=presentCpuTimes.getCpuUsage(this.cpuTimesSnapshot);
 		this.cpuTimesSnapshot=presentCpuTimes;
-
-		//Attempt to get CPU percentage for a given pid
-		/*ProcessInfo[] psinfo = js.processTable();
-		publicstaticvoidprocessInfo(intprocessId) {new JavaSysMon();//get a list of
-
-			Process infoProcessInfo pstemp;
-			pstemp = psinfo[i];
-			systemMillis = pstemp.getSystemMillis();
-			userMillis = pstemp.getUserMillis();
-		}
-	}
-	CpuTimes cput =
-
-					System.out.println("processId:"+
-					processId);
-					System.out.println("processId
-	systemMillis:"+ systemMillis);
-					System.out.println("processId userMillis:"+
-	userMillis);
-	System.out.println("processId CPU
-	Utilization:"+ util);
-}
- longuserMillis = 0, systemMillis = 0;for(inti=0; i<psinfo.length;i++)
-		{intpid =
-
-		pstemp.getPid();if(pid == processId) {break;new CpuTimes(userMillis,
-		systemMillis, 0);floatutil = cput.getCpuUsage(cput) *
-		100; */
 
 		return ret;
 	}
