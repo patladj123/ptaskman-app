@@ -132,13 +132,13 @@ public class BridgeWithJavaSysMon implements PsLibPTaskmanagerBridge {
 
 	@Override
 	public int getSystemCPUCoresNum() {
-//		return jsm.numCpus();
-		return 999;
+		return jsm.numCpus();
 	}
 
 	@Override
 	public long getSystemCPUFrequencyHz() {
-		return jsm.cpuFrequencyInHz();
+//		return jsm.cpuFrequencyInHz();
+		return 999;
 	}
 
 	@Override
