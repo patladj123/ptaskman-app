@@ -1,6 +1,6 @@
 ## PTaskman
 PTaskman is web based cross-platform task manager which allows you to monitor the resources like memory and CPU usage on the machine that it is running, also allows you to monitor and kill the processes.
-Soon there will be a stage demo url.
+Online demo at: http://www.websitedevguide.com:8080/jsp/ptaskman.jsp
 
 Version 1.0 released.
 It should be working on Windows, Linux and OS X, but I haven't had the chance to test it on OS X yet, so please stick to Windows and Linux for now.
