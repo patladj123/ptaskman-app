@@ -350,8 +350,8 @@ function initGlobalmeminfoSmoothie(max) {
 
 //Invokes a kill process command to the server for the selected PID
 function killproc() {
-    return;
     alert('Process kill temporary disabled. Kill processes on your server. HOWTO at https://github.com/patladj123/ptaskman-app');
+    return;
     if (_selectedPid !== -1) {
         ws.send("kill_process "+_selectedPid);
     }
