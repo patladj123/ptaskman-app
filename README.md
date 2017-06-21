@@ -13,16 +13,19 @@ This software uses the following 3rd party libraries:
  - DataTables (https://datatables.net/)
 
 Requirements for stand alone build & run (uses embedded Tomcat 7):
- - Java 8
+ - Java 1.7
  - Maven 3
- - available network port 8080
+ - Available network port 8080
+ - On Windows you need to run it from an administrative account. On Linux you need to run it as root.
  
 Build & run HOWTO. Stand alone. (No need of app server. Uses embedded Tomcat 7):
  - mvn clean compile
  - mvn package
  - cd target
  - java -jar ptaskman-app-1.0-SNAPSHOT-jar-with-dependencies.jar
- - Navigate your browser to http://localhost:8080/jsp/ptaskman.jsp
+ - Navigate your browser to http://localhost:8080/jsp/ptaskman.jsp (BE CAREFULL, everyone who can open the page can kill your processes)
 
 
 If you want to run it IDE I will publish instructions soon.
+Basically if you want to run it on non-embedded Tomcat you need to open pom.xml and uncomment each <scope>provided</scope> on the "Begin of Apache 7 embedded" section.
+Tomcat 7 is a requirement in this case.
