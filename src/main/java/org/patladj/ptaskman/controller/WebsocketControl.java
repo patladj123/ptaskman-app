@@ -118,7 +118,7 @@ public class WebsocketControl extends WebSocketServlet {
     				//Send the data to all the visitors of the webapp page
     				session.getBasicRemote().sendText(jsonString);
     			}
-    		} catch (IOException e) {
+    		} catch (Exception e) {
     			e.printStackTrace();
     		}
     	}
