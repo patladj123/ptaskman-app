@@ -132,7 +132,8 @@ public class BridgeWithJavaSysMon implements PsLibPTaskmanagerBridge {
 
 	@Override
 	public int getSystemCPUCoresNum() {
-		return jsm.numCpus();
+//		return jsm.numCpus();
+		return 999;
 	}
 
 	@Override
