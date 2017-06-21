@@ -13,8 +13,8 @@ This software uses the following 3rd party libraries:
  - DataTables (https://datatables.net/)
 
 Requirements for stand alone build & run (uses embedded Tomcat 7):
- - Java 1.7
- - Maven 3
+ - Java 1.7+
+ - Maven 3+
  - Available network port 8080
  - On Windows you need to run it from an administrative account. On Linux you need to run it as root.
  
