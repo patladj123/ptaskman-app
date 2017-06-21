@@ -296,7 +296,7 @@ ws.onmessage = function(message) {
         var cmdData=aJson.cmdData;
         $('#osname').html(cmdData.osname);
         $('#cpucores').html(cmdData.cpucores);
-        $('#cpufreq').html(cmdData.cpufreq+"MHz");
+        $('#cpufreq').html( (cmdData.cpufreq=="0.0"?"error obtaining":cmdData.cpufreq+"MHz"));
         $('#uptime').html(cmdData.uptime);
         $('#cpuinfo').html(cmdData.cpuinfo);
         $('#raminfo').html(cmdData.raminfo);

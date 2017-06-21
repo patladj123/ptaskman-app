@@ -95,10 +95,18 @@ public class FrontEndControl implements Runnable {
 			double totRamInGb=Util.roundToPrec(psUtilLib.getSystemRAMTotal()/1024.0d/1024.0d/1024.0d,3);
 			double usedRamInGb=Util.roundToPrec(psUtilLib.getSystemRAMInUse()/1024.0d/1024.0d/1024.0d,3);
 
+			long systemCPUFrequencyHz=0l;
+			String formatedCPUFreq="0.0";
+			try { //There's a bug in the JavaSysMon lib preventing the CPU freq on some Linux systems to be obtained. The front-end is instructed if CPUfreq is 0.0, not to disaplay it at all
+				systemCPUFrequencyHz = psUtilLib.getSystemCPUFrequencyHz();
+				formatedCPUFreq = Util.digits1Format.format(Util.roundToPrec(systemCPUFrequencyHz / 1024.0d / 1024.0d, 1));
+			}
+			catch (Exception e) { /* Ignore */ }
+
 			jsonData="{ \"cmd\": \"globRes\", \"cmdData\": {" +
 					"\"osname\":\""+Util.JSString(psUtilLib.getSystemOSName())+"\"," +
 					"\"cpucores\":\""+psUtilLib.getSystemCPUCoresNum()+"\"," +
-					"\"cpufreq\":\""+Util.digits1Format.format(Util.roundToPrec(psUtilLib.getSystemCPUFrequencyHz()/1024.0d/1024.0d,1))+"\"," +
+					"\"cpufreq\":\""+ formatedCPUFreq +"\"," +
 					"\"uptime\":\""+Util.secondsToReadable(psUtilLib.getSystemUptimeSeconds())+"\"," +
 					"\"cpuinfo\":\""+Util.digits1Format.format(Util.roundToPrec(psUtilLib.getSystemCpuUsagePercent()*100,1))+"\"," +
 					"\"raminfo\":\""+Util.digits3Format.format(usedRamInGb)+"Gb out of "+Util.digits3Format.format(totRamInGb)+"Gb\"," +

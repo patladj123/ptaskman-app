@@ -137,8 +137,8 @@ public class BridgeWithJavaSysMon implements PsLibPTaskmanagerBridge {
 
 	@Override
 	public long getSystemCPUFrequencyHz() {
-//		return jsm.cpuFrequencyInHz();
-		return 999;
+		return jsm.cpuFrequencyInHz();
+//		return 999;
 	}
 
 	@Override
