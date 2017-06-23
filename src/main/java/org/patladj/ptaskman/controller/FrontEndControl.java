@@ -168,7 +168,7 @@ public class FrontEndControl implements Runnable {
 				}
 				
 				if (pid > 0) {
-					psUtilLib.getProcessKillstatus(pid);
+//					psUtilLib.getProcessKillstatus(pid);
 				}
 			break;
 			
