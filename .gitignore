@@ -29,4 +29,5 @@ hs_err_pid*
 /.settings
 /.externalToolBuilders
 /Start.bat
+/ptaskman-app.iml
 /.idea
