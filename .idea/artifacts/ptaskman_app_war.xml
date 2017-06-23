@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="ptaskman-app:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="ptaskman-app.war">
-      <element id="artifact" artifact-name="ptaskman-app:war exploded" />
-    </root>
-  </artifact>
-</component>
