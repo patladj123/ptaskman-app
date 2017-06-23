@@ -105,7 +105,7 @@ public class BridgeWithJavaSysMon implements PsLibPTaskmanagerBridge {
 					}
 					// <-------------------------------------------------------------------- End calc CPU usage for particular process -----------------
 
-					p.memUsageMb =Util.roundToPrec(pt[i].getTotalBytes() / 1024.0f / 1024.0f, 2);
+					p.memUsageMb =Util.roundToPrec(pt[i].getResidentBytes() / 1024.0f / 1024.0f, 2);
 
 					pl.add(p);
 
